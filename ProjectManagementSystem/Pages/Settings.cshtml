@@ -1,0 +1,131 @@
+﻿@page
+@model ProjectManagementSystem.Pages.SettingsModel
+@{
+    ViewData["Title"] = "Setting";
+}
+
+<div class="d-flex justify-content-between bg-white py-3 px-4 box-shadow border-bottom align-items-center">
+    <div class="d-flex align-items-center gap-1">
+        <button class="navbar-toggler px-0 py-0 d-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <svg class="" width="22" height="22" viewBox="0 0 48 32" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 32H0V26.6667H24V32ZM48 18.6667H0V13.3333H48V18.6667ZM48        5.33333H24V0H48V5.33333Z" fill="#444468f2" />
+                </svg>
+            </span>
+        </button>
+        <h5 class="mb-0 fw-bold">@ViewData["Title"]s</h5>
+    </div>
+</div>
+
+<ul id="tabButtonsCont" class="nav border-bottom bg-white px-4 flex-nowrap overflow-auto gap-3 pt-3">
+
+    <li class="nav-item">
+        <a class="text-dark text-small px-0 pt-0 pb-3 nav-link sub-nav active" href="#changePassword">
+            Change Password
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="text-dark text-small px-0 pt-0 pb-3 nav-link sub-nav" href="#updatePhoneNumber">
+            Update Number
+        </a>
+    </li>
+</ul>
+
+<div class="d-flex flex-column gap-3 p-4">
+    <section id="changePassword" class="change-password-wrapper bg-white p-4 rounded-3 d-flex flex-column               gap-3">
+        <div class="d-flex flex-column gap-1 border-bottom pb-3">
+            <h5 class="fw-bold mb-0">Change Password</h5>
+            <p class="mb-0 text-small text-dark">
+                Change your password so as to update your security.
+            </p>
+        </div>
+        <form method="post" class="d-flex flex-column gap-2">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="OldPassword" class="form-label mb-1">Old Password</label>
+                <input asp-for="OldPassword" type="password" class="form-control" required />
+            </div>
+            <div>
+                <label asp-for="NewPassword" class="form-label mb-1">New Password</label>
+                <input asp-for="NewPassword" type="password" class="form-control" required />
+            </div>
+            <div>
+                <label asp-for="ConfirmPassword" class="form-label mb-1">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" required />
+            </div>
+            <div class="mt-1">
+                <button type="submit" class="btn btn-dark">Change Password</button>
+            </div>
+        </form>
+    </section>
+
+    <section id="updatePhoneNumber" class="change-password-wrapper bg-white p-4 rounded-3 d-none d-flex 
+        flex-column gap-3">
+        <div class="d-flex flex-column gap-1 border-bottom pb-3">
+            <h5 class="fw-bold mb-0">Update Number</h5>
+            <p class="mb-0 text-small text-dark">
+                Update your profile and how people can contact you generally.
+            </p>
+        </div>
+        <form method="post" asp-page-handler="UpdateNumber" class="d-flex flex-column gap-2">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="OldNumber" class="form-label mb-1">Old Number</label>
+                <input asp-for="OldNumber" type="number" class="form-control" required />
+            </div>
+            <div>
+                <label asp-for="NewNumber" class="form-label mb-1">New Number</label>
+                <input asp-for="NewNumber" type="number" class="form-control" required />
+            </div>
+            <div class="mt-1">
+                <button type="submit" class="btn btn-dark">Update</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+
+
+
+@section Scripts{
+    <script>
+        let changePasswordSection = document.querySelector("#changePassword");
+        let updatePhoneNumberSection = document.querySelector("#updatePhoneNumber");
+        let buttons = document.querySelectorAll(".nav-link.sub-nav");
+
+        changePageSection(location.hash);
+
+        buttons.forEach(element => {
+            element.addEventListener("click", () => {
+                changePageSection(new URL(element.href).hash);
+            });
+        });
+
+        function changePageSection(urlHash) {
+            let tabButtonsCont = document.querySelector("#tabButtonsCont");
+            if (urlHash.substring(1) == "updatePhoneNumber") {
+                showUpdateNumberSection(tabButtonsCont);
+            }
+            else {
+                showChangePasswordSection(tabButtonsCont);
+            }
+        };
+
+        function showChangePasswordSection(tabButtonsContainer) {
+            changePasswordSection.classList.remove("d-none");
+            updatePhoneNumberSection.classList.add("d-none")
+            tabButtonsContainer.children[0].firstElementChild.classList.add("active");
+            tabButtonsContainer.children[1].firstElementChild.classList.remove("active");
+        };
+
+        function showUpdateNumberSection(tabButtonsContainer) {
+            changePasswordSection.classList.add("d-none");
+            updatePhoneNumberSection.classList.remove("d-none")
+            tabButtonsContainer.children[0].firstElementChild.classList.remove("active");
+            tabButtonsContainer.children[1].firstElementChild.classList.add("active");
+        };
+    </script>
+}

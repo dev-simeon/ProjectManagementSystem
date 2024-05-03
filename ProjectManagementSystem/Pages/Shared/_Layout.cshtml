@@ -1,0 +1,172 @@
+﻿@using ProjectManagementSystem.Data
+@using ProjectManagementSystem.Models
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+
+@inject PMSContext _context
+
+@{
+    User currAuthUser = await _context.Users.FindAsync(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+    var userFullName = currAuthUser.FullName;
+    var initial = string.Join("", userFullName.Split(' ').Select(s => s[0]));
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProjectManagementSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProjectManagementSystem.styles.css" asp-append-version="true" />
+</head>
+<body class="vh-100">
+    <nav class="h-100 border-end fixed-top start-0 bg-white box-shadow sidebar d-none d-lg-flex flex-column gap-5 pt-4 pb-5">
+        <div class="d-flex gap-1 align-items-center px-4 pb-4 border-bottom">
+            <div class="d-flex justify-content-center align-items-center bg-dark initial-background">
+                <p class="mb-0 text-white text-small">
+                    @initial
+                </p>
+            </div>
+            <div class="d-flex flex-column overflow-hidden">
+                <p class="user-fullname mb-0">@userFullName</p>
+                <p class="mb-0 text-small user-email">@currAuthUser.Email</p>
+            </div>
+        </div>
+
+        <div class="h-100 d-flex flex-column overflow-hidden">
+            <ul class="navbar-nav flex-fill gap-3 px-4">
+                <li class="d-flex gap-2 align-items-center rounded-3 nav-item active px-3 py-2">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.0625 7.5C8.81386 7.5 8.5754 7.59877 8.39959 7.77459C8.22377 7.9504 8.125 8.18886 8.125 8.4375V17.8125C8.125 18.0611 8.22377 18.2996 8.39959 18.4754C8.5754 18.6512 8.81386 18.75 9.0625 18.75C9.31114 18.75 9.5496 18.6512 9.72541 18.4754C9.90123 18.2996 10 18.0611 10 17.8125V8.4375C10 8.18886 9.90123 7.9504 9.72541 7.77459C9.5496 7.59877 9.31114 7.5 9.0625 7.5ZM15 7.5C14.7514 7.5 14.5129 7.59877 14.3371 7.77459C14.1613 7.9504 14.0625 8.18886 14.0625 8.4375V14.0625C14.0625 14.3111 14.1613 14.5496 14.3371 14.7254C14.5129 14.9012 14.7514 15 15 15C15.2486 15 15.4871 14.9012 15.6629 14.7254C15.8387 14.5496 15.9375 14.3111 15.9375 14.0625V8.4375C15.9375 8.18886 15.8387 7.9504 15.6629 7.77459C15.4871 7.59877 15.2486 7.5 15 7.5ZM20 8.4375C20 8.18886 20.0988 7.9504 20.2746 7.77459C20.4504 7.59877 20.6889 7.5 20.9375 7.5C21.1861 7.5 21.4246 7.59877 21.6004 7.77459C21.7762 7.9504 21.875 8.18886 21.875 8.4375V20.3125C21.875 20.5611 21.7762 20.7996 21.6004 20.9754C21.4246 21.1512 21.1861 21.25 20.9375 21.25C20.6889 21.25 20.4504 21.1512 20.2746 20.9754C20.0988 20.7996 20 20.5611 20 20.3125V8.4375Z" fill="#333333" />
+                        <path d="M4.6875 2.5H25.3125C26.52 2.5 27.5 3.48 27.5 4.6875V25.3125C27.5 25.8927 27.2695 26.4491 26.8593 26.8593C26.4491 27.2695 25.8927 27.5 25.3125 27.5H4.6875C4.10734 27.5 3.55094 27.2695 3.1407 26.8593C2.73047 26.4491 2.5 25.8927 2.5 25.3125V4.6875C2.5 3.48 3.48 2.5 4.6875 2.5ZM4.375 4.6875V25.3125C4.375 25.485 4.515 25.625 4.6875 25.625H25.3125C25.3954 25.625 25.4749 25.5921 25.5335 25.5335C25.5921 25.4749 25.625 25.3954 25.625 25.3125V4.6875C25.625 4.60462 25.5921 4.52513 25.5335 4.46653C25.4749 4.40792 25.3954 4.375 25.3125 4.375H4.6875C4.60462 4.375 4.52513 4.40792 4.46653 4.46653C4.40792 4.52513 4.375 4.60462 4.375 4.6875Z" fill="#333333" />
+                    </svg>
+                    <a asp-page="Projects" class="nav-link py-0 text-decoration-none">
+                        Projects
+                    </a>
+                </li>
+                <li class="d-flex gap-2 align-items-center rounded-3 nav-item px-3 py-2">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.6688 26.25L12.2163 22.635C11.8171 22.5142 11.3858 22.325 10.9225 22.0675C10.4592 21.81 10.0642 21.5333 9.73751 21.2375L6.40376 22.6562L4.07251 18.5938L6.95376 16.4213C6.91709 16.1946 6.88668 15.9612 6.86251 15.7212C6.83834 15.4812 6.82668 15.2487 6.82751 15.0238C6.82751 14.8138 6.83918 14.5929 6.86251 14.3612C6.88584 14.1296 6.91626 13.8687 6.95376 13.5787L4.07251 11.4062L6.40376 7.39125L9.71376 8.7875C10.0871 8.47667 10.4913 8.19625 10.9263 7.94625C11.3613 7.69625 11.7833 7.50292 12.1925 7.36625L12.6675 3.75H17.3313L17.7838 7.39C18.2629 7.5575 18.6863 7.75042 19.0538 7.96875C19.4213 8.18708 19.8 8.45958 20.19 8.78625L23.5963 7.39125L25.9275 11.4062L22.95 13.6512C23.0183 13.9096 23.0567 14.1463 23.065 14.3612C23.0733 14.5763 23.0775 14.7892 23.0775 15C23.0775 15.1942 23.0692 15.3988 23.0525 15.6138C23.0367 15.8296 23 16.0904 22.9425 16.3962L25.8725 18.5938L23.5413 22.6562L20.19 21.2138C19.8008 21.5404 19.4092 21.8208 19.015 22.055C18.62 22.2892 18.2096 22.4742 17.7838 22.61L17.3313 26.25H12.6688ZM13.75 25H16.195L16.6563 21.615C17.2863 21.4483 17.8529 21.2196 18.3563 20.9287C18.8596 20.6379 19.3729 20.2396 19.8963 19.7337L23.015 21.0625L24.2575 18.9375L21.5213 16.8825C21.6254 16.5267 21.6946 16.1992 21.7288 15.9C21.7629 15.6008 21.7796 15.3008 21.7788 15C21.7788 14.6833 21.7621 14.3833 21.7288 14.1C21.6954 13.8167 21.6263 13.5054 21.5213 13.1663L24.305 11.0625L23.0625 8.9375L19.8725 10.275C19.4942 9.85917 18.9971 9.47 18.3813 9.1075C17.7654 8.745 17.1821 8.50417 16.6313 8.385L16.25 5H13.7575L13.3675 8.36C12.7375 8.495 12.1583 8.71167 11.63 9.01C11.1017 9.30833 10.5767 9.71917 10.055 10.2425L6.93751 8.9375L5.69501 11.0625L8.40626 13.0875C8.30209 13.3675 8.22918 13.6717 8.18751 14C8.14584 14.3283 8.12501 14.67 8.12501 15.025C8.12501 15.3417 8.14584 15.6562 8.18751 15.9688C8.22918 16.2812 8.29418 16.5854 8.38251 16.8813L5.69501 18.9375L6.93751 21.0625L10.0313 19.75C10.5213 20.245 11.0304 20.6421 11.5588 20.9412C12.0871 21.2404 12.6821 21.4733 13.3438 21.64L13.75 25ZM14.9663 18.125C15.8379 18.125 16.5767 17.8221 17.1825 17.2162C17.7883 16.6104 18.0913 15.8717 18.0913 15C18.0913 14.1283 17.7883 13.3896 17.1825 12.7838C16.5767 12.1779 15.8379 11.875 14.9663 11.875C14.0896 11.875 13.3496 12.1779 12.7463 12.7838C12.1429 13.3896 11.8413 14.1283 11.8413 15C11.8413 15.8717 12.1429 16.6104 12.7463 17.2162C13.3496 17.8221 14.0896 18.125 14.9663 18.125Z" fill="#333333" />
+                    </svg>
+                    <a asp-page="Settings" class="nav-link py-0 text-decoration-none" >
+                        Settings
+                    </a>
+                </li>
+                <li class="d-flex gap-2 align-items-center rounded-3 nav-item px-3 py-2">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.01875 25C6.44375 25 5.96375 24.8075 5.57875 24.4225C5.19375 24.0375 5.00083 23.5571 5 22.9813V7.01875C5 6.44375 5.19292 5.96375 5.57875 5.57875C5.96458 5.19375 6.44458 5.00083 7.01875 5H15.0238V6.25H7.01875C6.82708 6.25 6.65083 6.33 6.49 6.49C6.32917 6.65 6.24917 6.82625 6.25 7.01875V22.9813C6.25 23.1729 6.33 23.3492 6.49 23.51C6.65 23.6708 6.82625 23.7508 7.01875 23.75H15.0238V25H7.01875ZM20.5775 19.4225L19.7 18.5238L22.5988 15.625H11.49V14.375H22.5988L19.6987 11.475L20.5775 10.5775L25 15L20.5775 19.4225Z" fill="#333333" />
+                    </svg>
+                    <a asp-page="Index" class="nav-link py-0 text-decoration-none">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav px-4">
+                <li class="d-flex gap-2 fw-semibold align-items-center nav-item rounded-3 px-3 py-2" style="background-color: #f8f8fa;">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.75 15.625H15.625V18.75C15.625 18.9158 15.5592 19.0747 15.4419 19.1919C15.3247 19.3092 15.1658 19.375 15 19.375C14.8342 19.375 14.6753 19.3092 14.5581 19.1919C14.4408 19.0747 14.375 18.9158 14.375 18.75V15.625H11.25C11.0842 15.625 10.9253 15.5592 10.8081 15.4419C10.6908 15.3247 10.625 15.1658 10.625 15C10.625 14.8342 10.6908 14.6753 10.8081 14.5581C10.9253 14.4408 11.0842 14.375 11.25 14.375H14.375V11.25C14.375 11.0842 14.4408 10.9253 14.5581 10.8081C14.6753 10.6908 14.8342 10.625 15 10.625C15.1658 10.625 15.3247 10.6908 15.4419 10.8081C15.5592 10.9253 15.625 11.0842 15.625 11.25V14.375H18.75C18.9158 14.375 19.0747 14.4408 19.1919 14.5581C19.3092 14.6753 19.375 14.8342 19.375 15C19.375 15.1658 19.3092 15.3247 19.1919 15.4419C19.0747 15.5592 18.9158 15.625 18.75 15.625Z" fill="#333333" />
+                        <path d="M15 27.415C12.5438 27.4155 10.1427 26.6876 8.10023 25.3233C6.0578 23.959 4.46583 22.0197 3.52567 19.7506C2.5855 17.4815 2.33939 14.9846 2.81844 12.5756C3.29749 10.1666 4.48019 7.95376 6.21696 6.21699C7.95373 4.48022 10.1665 3.29752 12.5755 2.81847C14.9845 2.33942 17.4815 2.58554 19.7506 3.5257C22.0197 4.46586 23.959 6.05783 25.3233 8.10026C26.6875 10.1427 27.4155 12.5438 27.415 15C27.411 18.2914 26.1017 21.4469 23.7743 23.7743C21.4469 26.1017 18.2914 27.411 15 27.415ZM15 3.83124C12.7912 3.83075 10.6319 4.48526 8.79508 5.712C6.95829 6.93875 5.52654 8.68263 4.68087 10.7231C3.83521 12.7636 3.61363 15.009 4.04415 17.1754C4.47466 19.3418 5.53794 21.3319 7.09952 22.894C8.6611 24.4561 10.6508 25.5201 12.8171 25.9513C14.9834 26.3826 17.2289 26.1617 19.2696 25.3168C21.3104 24.4718 23.0548 23.0406 24.2821 21.2042C25.5095 19.3679 26.1647 17.2088 26.165 15C26.162 12.0394 24.9848 9.2009 22.8917 7.10711C20.7987 5.01331 17.9605 3.83521 15 3.83124Z" fill="#333333" />
+                    </svg>
+                    <a class="nav-link text-decoration-none"
+                       data-bs-toggle="modal" href="#createProjectModal" id="createProjectLink">
+                        Create New Project
+                    </a>
+
+                </li>
+            </ul>
+        </div>
+
+
+    </nav>
+
+    <main role="main" class="pb-3 h-100">
+        @RenderBody()
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="successModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Place the success message here -->
+                    @if (!string.IsNullOrEmpty(TempData["SuccessMessage"]?.ToString()))
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer justify-content-start">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offcanvas menu -->
+    <!-- Offcanvas end -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // JavaScript to show the modal when the success message is present
+            // Check if a flag is set in TempData to show the modal
+            let showModal = '@TempData["ShowModal"]';
+            if (showModal && showModal.toLowerCase() === "true") {
+                $('#successModal').modal('show');
+            }
+            // const addProjectModal = document.querySelector("#createProjectModal");
+
+            // addProjectModal.addEventListener("show.bs.modal", () => {
+            //     const crfToken = document.querySelector('[name = "__RequestVerificationToken"]').value;
+            //     const projectName = document.querySelector("#projectName");
+            //     const projectDescription = document.querySelector("#projectDescription");
+            //     const btnToCreateProject = document.querySelector("#submitProject");
+
+            //     btnToCreateProject.addEventListener("click", () => {
+            //         let allProject = document.querySelector(".collapse.project-wrapper");
+            //         let projectNameValue = projectName.value;
+            //         let projectDescriptionValue = projectDescription.value;
+            //         if (projectNameValue.trim() === "" || projectDescriptionValue.trim() === "") {
+            //             console.log("input field is empty");
+            //             return;
+            //         }
+
+            //         const formData = new FormData();
+            //         formData.append("name", projectNameValue);
+            //         formData.append("description", projectDescriptionValue);
+            //         formData.append("__RequestVerificationToken", crfToken)
+            //         const data = new URLSearchParams(formData);
+
+            //         fetch('/Index1?handler=AddProject', {
+            //             method: 'POST',
+            //             body: data
+            //         })
+            //         .then(response => {
+            //             if (response.ok) {
+            //                 return window.location.reload();
+            //             }
+            //             return response.json().then(error => {
+            //                 console.error(`Error ${response.status}: ${error.Message}`);
+            //             });
+            //         })
+            //         .catch(error => console.error('Error:', error));
+            //     })
+            // });
+        })
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

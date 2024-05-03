@@ -1,0 +1,293 @@
+﻿@page "{projectId:int}"
+@model ProjectManagementSystem.Pages.FeaturesModel
+@{
+    ViewData["Title"] = "Feature";
+}
+
+<div class="d-flex justify-content-between bg-white py-3 px-4 box-shadow border-bottom align-items-center">
+    <div class="d-flex align-items-center gap-2">
+        <button class="navbar-toggler px-0 py-0 d-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <svg class="" width="22" height="22" viewBox="0 0 48 32" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24 32H0V26.6667H24V32ZM48 18.6667H0V13.3333H48V18.6667ZM48  5.33333H24V0H48V5.33333Z" fill="#444468f2" />
+                </svg>
+            </span>
+        </button>
+        <p class="mb-0 d-flex align-items-center">
+            <span>@Model.ProjectName</span>
+            <h3 class="mb-0 fw-bold">> @ViewData["Title"]s </h3>
+        </p>
+    </div>
+    @if(Model.IfUserIsProjectOwner(Model.CurrUserId, Model.ProjectId))
+    {
+        <a href="#addCollaborator" data-bs-toggle="modal" class="border text-decoration-none mb-0 text-dark rounded-4 d-flex px-3 py-2 gap-1 align-items-center">
+            <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.7031 6.5625C15.5887 8.15117 14.4101 9.375 13.125 9.375C11.8398 9.375 10.6594 8.15156 10.5469 6.5625C10.4297 4.90977 11.5769 3.75 13.125 3.75C14.673 3.75 15.8203 4.93984 15.7031 6.5625Z" stroke="#706C6C" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M13.125 11.875C10.5793 11.875 8.13128 13.1395 7.518 15.602C7.43675 15.9277 7.64104 16.25 7.97581 16.25H18.2746C18.6094 16.25 18.8125 15.9277 18.7324 15.602C18.1192 13.1 15.6711 11.875 13.125 11.875Z" stroke="#706C6C" stroke-width="1" stroke-miterlimit="10" />
+                <path d="M7.81251 7.26328C7.7211 8.53203 6.76876 9.53125 5.74219 9.53125C4.71563 9.53125 3.76173 8.53242 3.67188 7.26328C3.57852 5.94336 4.50548 5 5.74219 5C6.97891 5 7.90587 5.96758 7.81251 7.26328Z" stroke="#706C6C" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8.04689 11.9531C7.34181 11.6301 6.56525 11.5059 5.7422 11.5059C3.71095 11.5059 1.75392 12.5156 1.26369 14.4824C1.19923 14.7426 1.36252 15 1.6297 15H6.01564" stroke="#706C6C" stroke-width="1" stroke-miterlimit="10" stroke-linecap="round" />
+            </svg>
+            <span class="mb-0 fw-semibold">Collaborators</span>
+        </a>
+    }
+</div>
+
+
+<section class="d-flex flex-column gap-4 py-5 px-4">
+    <div class="d-flex justify-content-end">
+        <button class="d-flex align-items-center gap-2 btn btn-primary py-2" data-bs-toggle="modal"
+                data-bs-target="#createFeature">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_8_8743)">
+                    <path d="M11 20C11 20.2652 11.1054 20.5196 11.2929 20.7071C11.4804 20.8946 11.7348 21 12 21C12.2652 21 12.5196 20.8946 12.7071 20.7071C12.8946 20.5196 13 20.2652 13 20V13H20C20.2652 13 20.5196 12.8946 20.7071 12.7071C20.8946 12.5196 21 12.2652 21 12C21 11.7348 20.8946 11.4804 20.7071 11.2929C20.5196 11.1054 20.2652 11 20 11H13V4C13 3.73478 12.8946 3.48043 12.7071 3.29289C12.5196 3.10536 12.2652 3 12 3C11.7348 3 11.4804 3.10536 11.2929 3.29289C11.1054 3.48043 11 3.73478 11 4V11H4C3.73478 11 3.48043 11.1054 3.29289 11.2929C3.10536 11.4804 3 11.7348 3 12C3 12.2652 3.10536 12.5196 3.29289 12.7071C3.48043 12.8946 3.73478 13 4 13H11V20Z" fill="white" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_8_8743">
+                        <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <span>Add Feature</span>
+
+        </button>
+    </div>
+    <div class="d-flex flex-column gap-3">
+        @if (Model.Features.Any())
+        {
+            <div class="row row-gap-3">
+                @foreach (var feature in Model.Features)
+                {
+                    <div class="col-lg-5">
+                        <div class="card gap-3 p-4 rounded-4">
+                            <div class="border-bottom-0 align-items-center d-flex justify-content-between bg-white">
+                                <h5 class="card-title mb-0 fw-bold">@feature.Name</h5>
+                            </div>
+                            <div class="card-body px-0 py-0 d-flex flex-column gap-2 pb-0">
+                                <p class="mb-0 text-secondary feature-description">@feature.Description</p>
+                                <div>
+                                    <p class="mb-0 text-secondary">Duration</p>
+                                    <p class="mb-0">03 Jan 2025 - 04 Mar 2024</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <p class="d-flex align-items-center gap-1 mb-0 text-secondary text-small">
+                                        Tasks: <span class="d-flex align-items-center justify-content-center tasks border p-2 rounded-circle">@feature.Tasks.Count</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-danger text-center">
+                <h3>No feature found for this project...</h3>
+            </div>
+        }
+    </div>
+</section>
+
+
+
+<!-- Create Feature Modal -->
+<div class="modal shadow fade" id="createFeature" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createFeature">
+                    Add New Feature
+                </h1>
+            </div>
+            <form method="post">
+                <div class="text-danger mb-1" asp-validation-summary="ModelOnly"></div>
+                <div class="modal-body d-flex flex-column gap-2">
+                    <div class="">
+                        <label class="form-label" asp-for="FeatureName">Title</label>
+                        <input type="text" class="form-control" asp-for="FeatureName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="Description">Description</label>
+                        <textarea class="form-control" asp-for="Description" placeholder="Enter a description.." rows="3"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Collaborator Modal -->
+<div class="modal fade" id="addCollaborator" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Add New Collaborator
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-page-handler="AddCollaborators">
+                <div class="text-danger mb-1" asp-validation-summary="ModelOnly"></div>
+                <div class="modal-body d-flex flex-column gap-3 pb-5 gap-3">
+                    <div class="">
+                        <div class="d-flex gap-2 align-items-center">
+                            <input class="form-control shadow-sm h-100" type="search" asp-for="SearchInput" placeholder="search collaborator email" required>
+                            <button type="submit" class="btn btn-outline-primary">Invite</button>
+                        </div>
+                        <div class="d-flex flex-column gap-1" id="searchResults">
+                            <!-- Display search results here -->
+                        </div>
+                        <div class="mt-2">
+                            <select class="form-select" asp-for="Role" asp-items="Model.CollaboratorRoleList"></select>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var collaborator in Model.Collaborators)
+                        {
+                            var initial = string.Join("", collaborator.FullName.Split(' ').Select(s => s[0]));
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex rounded-circle justify-content-center align-items-center collaborator-profile bg-secondary">
+                                        <p class="mb-0 text-small">@initial</p>
+                                    </div>
+                                    <p class="mb-0">@collaborator.FullName - @collaborator.Role</p>
+                                </div>
+                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.5 23.75C7.5 25.125 8.625 26.25 10 26.25H20C21.375 26.25 22.5 25.125 22.5 23.75V8.75H7.5V23.75ZM23.75 5H19.375L18.125 3.75H11.875L10.625 5H6.25V7.5H23.75V5Z" fill="#4D4D4D" />
+                                </svg>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Delete Feature -->
+<div class="modal fade" id="deleteFeature" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="deleteFeatureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteEmployeeModalLabel">Delete Feature -<span id="featname"></span></h5>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="d-flex flex-column gap-3" asp-page-handler="DeleteFeature">
+                    <input type="hidden" name="featureId" id="deleteFeatureId" />
+                    <div class="mt-1 d-flex align-items-center gap-1">
+                        <button type="submit" class="btn btn-danger">delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@section Scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addCollaborator = document.getElementById('addCollaborator');
+            const deleteFeatureModal = document.getElementById("deleteFeature");
+
+
+            deleteFeatureModal.addEventListener("show.bs.modal", function (event) {
+                let button = event.relatedTarget;
+                let featureId = button.getAttribute('data-id');
+                let featureName = button.getAttribute('data-feature-name');
+
+                let hiddenInputField = deleteFeatureModal.querySelector("#deleteFeatureId");
+                hiddenInputField.value = featureId;
+
+                deleteFeatureModal.querySelector("#featname").innerHTML = featureName;
+            });
+
+            if (addCollaborator) {
+                addCollaborator.addEventListener("show.bs.modal", () => {
+                    const searchInput = document.getElementById('SearchInput');
+                    const searchResults = document.getElementById('searchResults');
+
+                    if (searchInput && searchResults) {
+                        searchInput.addEventListener('input', function () {
+                            const searchTerm = searchInput.value.trim();
+                            if (searchTerm === '') {
+                                searchResults.innerHTML = '';
+
+                                // Remove the class when search results are cleared
+                                searchResults.classList.remove('results-available');
+                                searchResults.classList.remove('shadow');
+
+                                return;
+                            }
+
+                            // Make an AJAX request to your server-side endpoint
+                            fetch(`/Features/${@Model.ProjectId}?handler=Search&query=${searchTerm}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Accept': 'application/json', // Set the Accept header to JSON
+                                }
+                            })
+                            .then(response => response.json())
+
+                            .then(data => {
+                                console.log(data);
+                                // Clear previous results
+                                searchResults.innerHTML = '';
+
+                                // Display new search results
+                                data.forEach(result => {
+                                    const resultItem = document.createElement('div');
+                                    // Display the relevant result data
+                                    resultItem.textContent = result.email;
+                                    searchResults.appendChild(resultItem);
+                                });
+                                searchResults.classList.add('results-available');
+                                searchResults.classList.add('shadow');
+                            })
+                            .catch(error => console.error('Error:', error));
+
+                            // Add click event listeners to search results
+                            searchResults.addEventListener('click', function (event) {
+                                const clickedResult = event.target.textContent;
+                                searchInput.value = clickedResult;
+                                // Clear results        
+                                searchResults.innerHTML = '';
+                                searchResults.classList.remove('results-available');
+                                searchResults.classList.remove('shadow');
+                            });
+                        });
+
+                        searchInput.addEventListener('keydown', function (event) {
+                            // Check if the Backspace key (keyCode 8) is pressed
+                            if (event.keyCode === 8 && searchInput.value === '') {
+                                // Clear the results and hide the container
+                                searchResults.innerHTML = '';
+                                searchResults.classList.remove('results-available');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+}
