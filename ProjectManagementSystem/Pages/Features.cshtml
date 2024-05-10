@@ -1,4 +1,6 @@
 ﻿@page "{projectId:int}"
+@using ProjectManagementSystem.Models;
+
 @model ProjectManagementSystem.Pages.FeaturesModel
 @{
     ViewData["Title"] = "Feature";
@@ -20,7 +22,7 @@
             <h3 class="mb-0 fw-bold">> @ViewData["Title"]s </h3>
         </p>
     </div>
-    @if(Model.IfUserIsProjectOwner(Model.CurrUserId, Model.ProjectId))
+    @if(Model.IsProjectOwner)
     {
         <a href="#addCollaborator" data-bs-toggle="modal" class="border text-decoration-none mb-0 text-dark rounded-4 d-flex px-3 py-2 gap-1 align-items-center">
             <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,32 +37,41 @@
 </div>
 
 
-<section class="d-flex flex-column gap-4 py-5 px-4">
-    <div class="d-flex justify-content-end">
-        <button class="d-flex align-items-center gap-2 btn btn-primary py-2" data-bs-toggle="modal"
-                data-bs-target="#createFeature">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_8_8743)">
-                    <path d="M11 20C11 20.2652 11.1054 20.5196 11.2929 20.7071C11.4804 20.8946 11.7348 21 12 21C12.2652 21 12.5196 20.8946 12.7071 20.7071C12.8946 20.5196 13 20.2652 13 20V13H20C20.2652 13 20.5196 12.8946 20.7071 12.7071C20.8946 12.5196 21 12.2652 21 12C21 11.7348 20.8946 11.4804 20.7071 11.2929C20.5196 11.1054 20.2652 11 20 11H13V4C13 3.73478 12.8946 3.48043 12.7071 3.29289C12.5196 3.10536 12.2652 3 12 3C11.7348 3 11.4804 3.10536 11.2929 3.29289C11.1054 3.48043 11 3.73478 11 4V11H4C3.73478 11 3.48043 11.1054 3.29289 11.2929C3.10536 11.4804 3 11.7348 3 12C3 12.2652 3.10536 12.5196 3.29289 12.7071C3.48043 12.8946 3.73478 13 4 13H11V20Z" fill="white" />
-                </g>
-                <defs>
-                    <clipPath id="clip0_8_8743">
-                        <rect width="24" height="24" fill="white" />
-                    </clipPath>
-                </defs>
-            </svg>
-            <span>Add Feature</span>
-
-        </button>
-    </div>
-    <div class="d-flex flex-column gap-3">
-        @if (Model.Features.Any())
+<section class="d-flex flex-column gap-4 py-5 px-4 wrapper">
+    
+    <div class="d-flex justify-content-between">
+        <p style="cursor: pointer;" onclick="history.back()" class="back-btn mb-0 d-flex gap-1 align-items-center fw-semibold">
+            <i class="bi bi-arrow-left fs-5"></i>
+            <span>Back</span>
+        </p>
+        @if (Model.IsProjectOwner)
         {
+            <button class="d-flex align-items-center gap-2 btn btn-primary py-2" data-bs-toggle="modal"
+                    data-bs-target="#createFeature">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_8_8743)">
+                        <path d="M11 20C11 20.2652 11.1054 20.5196 11.2929 20.7071C11.4804 20.8946 11.7348 21 12 21C12.2652 21 12.5196 20.8946 12.7071 20.7071C12.8946 20.5196 13 20.2652 13 20V13H20C20.2652 13 20.5196 12.8946 20.7071 12.7071C20.8946 12.5196 21 12.2652 21 12C21 11.7348 20.8946 11.4804 20.7071 11.2929C20.5196 11.1054 20.2652 11 20 11H13V4C13 3.73478 12.8946 3.48043 12.7071 3.29289C12.5196 3.10536 12.2652 3 12 3C11.7348 3 11.4804 3.10536 11.2929 3.29289C11.1054 3.48043 11 3.73478 11 4V11H4C3.73478 11 3.48043 11.1054 3.29289 11.2929C3.10536 11.4804 3 11.7348 3 12C3 12.2652 3.10536 12.5196 3.29289 12.7071C3.48043 12.8946 3.73478 13 4 13H11V20Z" fill="white" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_8_8743">
+                            <rect width="24" height="24" fill="white" />
+                        </clipPath>
+                    </defs>
+                </svg>
+                <span>Add Feature</span>
+
+            </button>
+        }
+    </div>
+
+    @if (Model.Features.Any())
+    {
+        <div class="d-flex flex-column gap-3">
             <div class="row row-gap-3">
                 @foreach (var feature in Model.Features)
                 {
-                    <div class="col-lg-5">
-                        <div class="card gap-3 p-4 rounded-4">
+                    <a asp-page="Tasks" asp-route-featureId="@feature.Id" class="col-12 text-decoration-none col-sm-6 col-xl-5 px-2">
+                        <div class="card gap-3 p-4 rounded-4 h-100">
                             <div class="border-bottom-0 align-items-center d-flex justify-content-between bg-white">
                                 <h5 class="card-title mb-0 fw-bold">@feature.Name</h5>
                             </div>
@@ -77,17 +88,18 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 }
             </div>
-        }
-        else
-        {
-            <div class="text-danger text-center">
-                <h3>No feature found for this project...</h3>
-            </div>
-        }
-    </div>
+            
+        </div>
+    }
+    else
+    {
+        <section class="d-flex flex-column align-items-center justify-content-center h-100">
+            <h3>No feature found for this project...</h3>
+        </section>
+    }
 </section>
 
 
@@ -280,7 +292,7 @@
                         searchInput.addEventListener('keydown', function (event) {
                             // Check if the Backspace key (keyCode 8) is pressed
                             if (event.keyCode === 8 && searchInput.value === '') {
-                                // Clear the results and hide the container
+                                // Clear the results and hide the wrapper
                                 searchResults.innerHTML = '';
                                 searchResults.classList.remove('results-available');
                             }

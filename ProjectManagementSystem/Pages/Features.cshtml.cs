@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Code;
 using ProjectManagementSystem.Data;
@@ -10,9 +12,11 @@ using System.Data;
 
 namespace ProjectManagementSystem.Pages
 {
+    [Authorize]
     public class FeaturesModel : PageModel
     {
         private readonly PMSContext _context;
+        private int _currUserId;
 
         public FeaturesModel(PMSContext context)
         {
@@ -23,48 +27,48 @@ namespace ProjectManagementSystem.Pages
         [BindProperty(SupportsGet = true)]
         public int ProjectId { get; set; }
 
-        public string ProjectName { get; set; }
+        public string ProjectName { get; set; } = string.Empty;
+        public bool IsProjectOwner { get; set; }
         public IEnumerable<CollaboratorViewModel> Collaborators { get; set; } = [];
         public List<SelectListItem> CollaboratorRoleList { get; set; } = [];
-
-        public int CurrUserId { get; set; }
 
         public ICollection<Feature> Features { get; set; } = [];
 
         [BindProperty]
-        public string FeatureName { get; set; }
+        public string FeatureName { get; set; } = string.Empty;
         [BindProperty]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [BindProperty]
         public CollaboratorRoles Role { get; set; }
 
         [BindProperty]
-        public string SearchInput { get; set; }
+        public string SearchInput { get; set; } = string.Empty;
 
 
         public async Task<PageResult> OnGet()
         {
             try
             {
-                CurrUserId = User.GetCurrUserId();
-
+                _currUserId = User.GetCurrUserId();
                 var project = await _context.Projects
                                                .Include(p => p.Features)
                                                .Include(p => p.Collaborators)
                                                .Include(p => p.Users)
-                                               .Where(p => p.Id == ProjectId)
-                                               .FirstOrDefaultAsync();
+                                               .FirstOrDefaultAsync(p => p.Id == ProjectId)
+                                               ?? throw new ArgumentNullException("Project Not found");
                 ProjectName = project.Name;
 
                 Features = project.Features;
+
                 Collaborators = project.Users
-                    .Select(c => 
-                        new CollaboratorViewModel(c.FullName, project.Collaborators
-                                .Where(f => f.UserId == c.Id)
-                                    .Select(r => r.Role)
-                                        .First())
-                    );
+                                 .Select(u => new CollaboratorViewModel(
+                                     u.FullName,
+                                     project.Collaborators.FirstOrDefault(c => c.UserId == u.Id).Role
+                                 ));
+                var userproject = project.Collaborators.FirstOrDefault(c => c.UserId == _currUserId);
+                IsProjectOwner = userproject.IsProjectOwner();
+
             }
             catch (Exception ex)
             {
@@ -88,6 +92,11 @@ namespace ProjectManagementSystem.Pages
 
         public async Task<ActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             try
             {
                 var project = await _context.Projects.Where(p => p.Id == ProjectId).SingleOrDefaultAsync();
@@ -97,6 +106,7 @@ namespace ProjectManagementSystem.Pages
                     var feature = new Feature(project, FeatureName);
 
                     project.Features.Add(feature);
+                    feature.AddDescription(Description);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -111,15 +121,18 @@ namespace ProjectManagementSystem.Pages
 
         public async Task<ActionResult> OnPostAddCollaboratorsAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             try
             {
-                var project = await _context.Projects
-                                            .Where(p => p.Id == ProjectId)
-                                            .SingleOrDefaultAsync();
+                var project = await _context.Projects.FindAsync(ProjectId)
+                                                ?? throw new ArgumentNullException($"Project with id: {ProjectId} not found");
 
-                var collaborator = await _context.Users
-                                                .Where(p => p.Email == SearchInput)
-                                                .SingleOrDefaultAsync();
+                var collaborator = await _context.Users.FirstOrDefaultAsync(u => u.Email == SearchInput)
+                                        ?? throw new ArgumentNullException($"Registered user with email: {SearchInput} not found");
 
                 project.AddCollaborator(collaborator, Role);
 
@@ -135,13 +148,6 @@ namespace ProjectManagementSystem.Pages
             }
 
             return RedirectToPage("Features");
-        }
-
-        public bool IfUserIsProjectOwner(int userId, int projectId)
-        {
-            return _context.UserProjects
-                .Where(up => up.UserId == userId && up.ProjectId == projectId && up.Role == CollaboratorRoles.OWNER)
-                .Any();
         }
 
         public List<SelectListItem> GetCollaboratorRolesSelectList()

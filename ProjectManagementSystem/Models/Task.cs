@@ -68,7 +68,7 @@ namespace ProjectManagementSystem.Models
 
         public int? AssigneeId { get; private set; }
 
-        [Required(ErrorMessage = "DueDate iss required")]
+        [Required(ErrorMessage = "DueDate is required")]
         public DateTime DueDate { get; private set; }
 
         public Status Status { get; private set; }

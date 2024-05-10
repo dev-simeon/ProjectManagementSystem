@@ -100,6 +100,12 @@ body {
     width: 400px;
 }
 
+.wrapper {
+    height: calc(100vh - 80.5px);
+    overflow-y: scroll;
+    pa
+}
+
 .project-card {
     min-width: 476px;
     max-width: 476px;
@@ -156,6 +162,10 @@ body {
     overflow-y: auto;
 }
 
+.back-btn {
+    font-size: 13px;
+}
+
 .hidden-content {
     display: none;
     animation: slide 1s forwards; /* 1s duration, animation stays in the final state */
@@ -176,6 +186,6 @@ body {
 }
 
 .bi-three-dots.dropdown,
-.dropdown-item{
+.dropdown-item,{
     cursor: pointer;
 }

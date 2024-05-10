@@ -6,6 +6,7 @@ namespace ProjectManagementSystem.Models
     {
         private UserProject() { }
 
+
         public UserProject(Project project, User user, CollaboratorRoles role)
         {
             ArgumentNullException.ThrowIfNull(project, nameof(project));
@@ -17,6 +18,12 @@ namespace ProjectManagementSystem.Models
             Role = role;
             CreatedAt = DateTime.UtcNow;
         }
+
+        public bool IsProjectOwner()
+        {
+            return Role == CollaboratorRoles.OWNER;
+        }
+
 
         [Required(ErrorMessage = "UserId is required")]
         public int UserId { get; private set; }

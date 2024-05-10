@@ -18,6 +18,11 @@ namespace ProjectManagementSystem.Models
             CreatedAt = DateTime.UtcNow;
         }
 
+        public void AddDescription(string description)
+        {
+            Description = description;
+        }
+
         public int Id { get; private set; }
         [Required(ErrorMessage = "ProjectId is required")]
         public int ProjectId { get; private set; }

@@ -21,8 +21,8 @@ namespace ProjectManagementSystem.Data
                 user.HasData(new List<User>
                 {
                     new("symeon", "omomowo", "omom@gmail.com", "08099626426", "userfive5"),
-                    new User("John", "Doe", "john.doe@example.com", "08099629428", "password123"),
-                    new User("Jane", "Smith", "jane.smith@example.com", "08089626426", "password456"),
+                    new("John", "Doe", "john.doe@example.com", "08099629428", "password123"),
+                    new("Jane", "Smith", "jane.smith@example.com", "08089626426", "password456"),
                 });
             });
 
