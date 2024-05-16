@@ -31,8 +31,8 @@
         </p>
         @if (Model.IsProjectOwner)
         {
-            <button class="d-flex align-items-center gap-2 btn btn-primary py-2" data-bs-toggle="modal"
-                    data-bs-target="#createFeature">
+            <button class="d-flex align-items-center gap-2 btn btn-primary py-2" data-bs-toggle="offcanvas"
+                    data-bs-target="#taskOffcanvas">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_8_8743)">
                         <path d="M11 20C11 20.2652 11.1054 20.5196 11.2929 20.7071C11.4804 20.8946 11.7348 21 12 21C12.2652 21 12.5196 20.8946 12.7071 20.7071C12.8946 20.5196 13 20.2652 13 20V13H20C20.2652 13 20.5196 12.8946 20.7071 12.7071C20.8946 12.5196 21 12.2652 21 12C21 11.7348 20.8946 11.4804 20.7071 11.2929C20.5196 11.1054 20.2652 11 20 11H13V4C13 3.73478 12.8946 3.48043 12.7071 3.29289C12.5196 3.10536 12.2652 3 12 3C11.7348 3 11.4804 3.10536 11.2929 3.29289C11.1054 3.48043 11 3.73478 11 4V11H4C3.73478 11 3.48043 11.1054 3.29289 11.2929C3.10536 11.4804 3 11.7348 3 12C3 12.2652 3.10536 12.5196 3.29289 12.7071C3.48043 12.8946 3.73478 13 4 13H11V20Z" fill="white" />
@@ -44,7 +44,6 @@
                     </defs>
                 </svg>
                 <span>Add Task</span>
-
             </button>
 
         }
@@ -55,17 +54,17 @@
         <section class="d-flex flex-column gap-3 col-lg-9">
             @foreach (var task in Model.Tasks)
             {
-                <div class="flex-row card align-items-center justify-content-between px-4 py-3 rounded-4 border-0 w-100">
+                <div data-task-id="@task.Id" onclick="populateOffcanvas(@task.Id)" data-bs-toggle="offcanvas" data-bs-target="#taskOffcanvas" class="flex-row card align-items-center justify-content-between px-4 py-3 rounded-4 border-0 w-100">
                     <div class="d-flex flex-row gap-3">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault">
                         <div class="d-flex flex-column gap-1">
-                            <p class="mb-0">just a simple task</p>
+                            <p class="mb-0">@task.Title</p>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="d-flex align-items-center gap-1">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M19.5 4H16.5V2.5C16.5 2.36739 16.4473 2.24021 16.3536 2.14645C16.2598 2.05268 16.1326 2 16 2C15.8674 2 15.7402 2.05268 15.6464 2.14645C15.5527 2.24021 15.5 2.36739 15.5 2.5V4H8.5V2.5C8.5 2.36739 8.44732 2.24021 8.35355 2.14645C8.25979 2.05268 8.13261 2 8 2C7.86739 2 7.74021 2.05268 7.64645 2.14645C7.55268 2.24021 7.5 2.36739 7.5 2.5V4H4.5C3.8372 4.00079 3.20178 4.26444 2.73311 4.73311C2.26444 5.20178 2.00079 5.8372 2 6.5V19.5C2.00079 20.1628 2.26444 20.7982 2.73311 21.2669C3.20178 21.7356 3.8372 21.9992 4.5 22H19.5C20.1629 21.9995 20.7985 21.7359 21.2672 21.2672C21.7359 20.7985 21.9995 20.1629 22 19.5V6.5C21.9995 5.83712 21.7359 5.20154 21.2672 4.73282C20.7985 4.26409 20.1629 4.00053 19.5 4ZM21 19.5C21 19.8978 20.842 20.2794 20.5607 20.5607C20.2794 20.842 19.8978 21 19.5 21H4.5C4.10218 21 3.72064 20.842 3.43934 20.5607C3.15804 20.2794 3 19.8978 3 19.5V11H21V19.5ZM21 10H3V6.5C3 5.672 3.67 5 4.5 5H7.5V6.5C7.5 6.63261 7.55268 6.75979 7.64645 6.85355C7.74021 6.94732 7.86739 7 8 7C8.13261 7 8.25979 6.94732 8.35355 6.85355C8.44732 6.75979 8.5 6.63261 8.5 6.5V5H15.5V6.5C15.5 6.63261 15.5527 6.75979 15.6464 6.85355C15.7402 6.94732 15.8674 7 16 7C16.1326 7 16.2598 6.94732 16.3536 6.85355C16.4473 6.75979 16.5 6.63261 16.5 6.5V5H19.5C19.8978 5 20.2794 5.15804 20.5607 5.43934C20.842 5.72064 21 6.10218 21 6.5V10Z" fill="#7E7E7E" />
                                     </svg>
-                                    <p class="mb-0 text-small text-secondary">Mon, 6 May</p>
+                                    <p class="mb-0 text-small text-secondary">@task.DueDate.ToString("ddd, dd MMM")</p>
                                 </div>
                                 <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="2.5" cy="3" r="2.5" fill="#CDCDCD" />
@@ -102,3 +101,109 @@
         </section>
     }
 </section>
+
+
+
+
+
+
+@* offcanvas *@
+<div class="offcanvas offcanvas-end border-start shadow-sm" data-bs-backdrop="static" tabindex="-1" id="taskOffcanvas" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header px-4 border-bottom">
+        <h5 class="offcanvas-title" id="offcanvasTitle">Add Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body px-4">
+        <form method="post" class="d-flex flex-column gap-4">
+            <input id="taskId" name="taskId" type="hidden" />
+            <div class="text-danger mb-1" asp-validation-summary="ModelOnly"></div>
+            <div class="d-flex flex-column gap-3">
+                <div class="">
+                    <label class="form-label" asp-for="TaskTitle">Title</label>
+                    <input type="text" class="form-control" asp-for="TaskTitle" required />
+                </div>
+                <div class="">
+                    <label class="form-label" asp-for="TaskDueDate">Due Date</label>
+                    <input type="date" min="@DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd")" class="form-control" asp-for="TaskDueDate" required />
+                </div>
+                <div class="">
+                    <label class="form-label" asp-for="Note">Note</label>
+                    <textarea type="date" class="form-control" asp-for="Note" rows="3"></textarea>
+                </div>
+                <div class="">
+                    <label class="form-label" asp-for="TaskPriority">Priority</label>
+                    <select class="form-select" asp-for="TaskPriority" asp-items="Model.TaskPriorityList" required></select>
+                </div>
+            </div>
+            <div class="">
+                <button id="ctaBtn" type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const offcanvas = document.getElementById("taskOffcanvas");
+
+            // Event listener for offcanvas show event
+            offcanvas.addEventListener("show.bs.offcanvas", function (event) {
+                const taskId = event.relatedTarget.getAttribute('data-task-id');
+                if (taskId) {
+                    populateOffcanvasWithTaskDetails(taskId);
+                } 
+                else {
+                    // Reset the offcanvas for adding a new task
+                    document.querySelector("#offcanvasTitle").textContent = "Add Task";
+                    document.querySelector("#ctaBtn").textContent = "Save";
+                    document.querySelector('#TaskTitle').value = "";
+                    document.querySelector('#TaskDueDate').value = "";
+                    document.querySelector('#Note').value = "";
+                    document.querySelector('#TaskPriority').value = "";
+                }
+            });
+        });
+
+
+        // Function to populate the offcanvas with task details
+        function populateOffcanvasWithTaskDetails(taskId) {
+            fetchTaskDetails(taskId)
+                .then(taskDetails => {
+                    const formattedDueDate = new Date(taskDetails.DueDate).toISOString().split('T')[0];
+
+                    // Populate the offcanvas input fields with the task details
+                    document.querySelector('#taskId').value = taskDetails.Id;
+                    document.querySelector("#offcanvasTitle").textContent = "Edit Task";
+                    document.querySelector("#ctaBtn").textContent = "Update Changes";
+                    document.querySelector('#TaskTitle').value = taskDetails.Title;
+                    document.querySelector('#TaskDueDate').value = formattedDueDate;
+                    document.querySelector('#Note').value = taskDetails.Note;
+                    document.querySelector('#TaskPriority').value = taskDetails.Priority;
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Function to fetch task details from the server
+        function fetchTaskDetails(taskId) {
+            var endPoint = `/Tasks/${@Model.FeatureId}?handler=TaskDetails&taskId=${taskId}`;
+            return fetch(endPoint, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`${response.status}`);
+                    }
+                    return response.json();
+                });
+        }
+    </script>
+}
+

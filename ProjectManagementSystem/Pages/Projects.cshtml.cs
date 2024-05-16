@@ -23,6 +23,7 @@ namespace ProjectManagementSystem.Pages
             // Retrieve projects where the user is the owner or a collaborator
             Projects = await context.Projects
                 .Include(p => p.Collaborators)
+                .Include(p => p.Features)
                 .Where(p => p.Collaborators.Any(up => up.UserId == User.GetCurrUserId()))
                 .ToListAsync();
 

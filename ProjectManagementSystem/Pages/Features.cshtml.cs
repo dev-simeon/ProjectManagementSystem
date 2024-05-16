@@ -53,6 +53,7 @@ namespace ProjectManagementSystem.Pages
                 _currUserId = User.GetCurrUserId();
                 var project = await _context.Projects
                                                .Include(p => p.Features)
+                                                .ThenInclude(f => f.Tasks)
                                                .Include(p => p.Collaborators)
                                                .Include(p => p.Users)
                                                .FirstOrDefaultAsync(p => p.Id == ProjectId)

@@ -90,6 +90,10 @@ html {
     }
 
 
+.offcanvas.offcanvas-end {
+    width: 400px;
+}
+
 body {
     background-color: #f8f8fa;
     color: #333333;

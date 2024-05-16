@@ -6,14 +6,20 @@ namespace ProjectManagementSystem.Models
     {
         private Task() { }
 
-        public Task(Feature feature, string title, DateTime dueDate, Priority priority)
+        public Task(Feature feature, string title, DateTime dueDate, string? note, Priority priority)
         {
             ArgumentNullException.ThrowIfNull(feature, nameof(feature));
             ArgumentException.ThrowIfNullOrWhiteSpace(title, nameof(title));
 
+            if (dueDate < DateTime.UtcNow)
+            {
+                throw new ArgumentException("Due date cannot be in the past.");
+            }
+
             FeatureId = feature.Id;
             Title = title;
             DueDate = dueDate;
+            Note = note;
             Status = Status.NOT_STARTED;
             Priority = priority;
             DateCreatedUtc = DateTime.UtcNow;
@@ -47,7 +53,7 @@ namespace ProjectManagementSystem.Models
             Status = newStatus;
         }
 
-        public void AddOrUpdateNote(string note)
+        public void UpdateNote(string? note)
         {
             Note = note;
         }
